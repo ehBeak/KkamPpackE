@@ -30,14 +30,21 @@ public class FragmentHome extends Fragment {
     // view 설정
     private View view;
 
-    /* recycler view 변수 설정 */
+    /* recycler view 변수 설정: task */
     private ArrayList<TaskData> taskDataArrayList;
     private TaskAdapter taskAdapter;
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
 
-    /* drag&drop */
+    /* recycler view 변수 설정: daily */
+    private ArrayList<DailyData> dailyDataArrayList;
+    private DailyAdapter dailyAdapter;
+    private RecyclerView dailyrecyclerView;
+    private GridLayoutManager dailygridLayoutManager;
+
+    /* drag&drop: task, daily */
     private ItemTouchHelper itemTouchHelper;
+    private ItemTouchHelper itemTouchHelperDaily;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -79,7 +86,7 @@ public class FragmentHome extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        /* recycler view */
+        /* recycler view: task */
         view = inflater.inflate(R.layout.fragment_home, container,false);
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerview_checklist);
@@ -94,18 +101,65 @@ public class FragmentHome extends Fragment {
 
         recyclerView.setAdapter(taskAdapter);
 
+        /* recycler view: daily */
+        dailyrecyclerView = (RecyclerView)view.findViewById(R.id.recyclerview_daily);
+
+        dailygridLayoutManager = new GridLayoutManager(view.getContext(), 3);
+
+        dailyrecyclerView.setLayoutManager(dailygridLayoutManager);
+
+        dailyDataArrayList = new ArrayList<>();
+
+        dailyAdapter = new DailyAdapter(dailyDataArrayList);
+
+        dailyrecyclerView.setAdapter(dailyAdapter);
+
         /* drag & drop */
+        // task
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(taskAdapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
+        // daily
+        itemTouchHelperDaily = new ItemTouchHelper(new ItemTouchHelperCallback(dailyAdapter));
+        itemTouchHelperDaily.attachToRecyclerView(dailyrecyclerView);
 
+
+        /* 6개 데이터 각각 추가: task */
+        for(int i=0; i<6; i++) {
+            TaskData taskData = new TaskData(R.drawable.ic_launcher_background, "task", 0);
+            taskDataArrayList.add(taskData);
+            taskAdapter.notifyDataSetChanged();
+        }
+
+        /* 6개 데이터 각각 추가: daily */
+        for(int i=0; i<6; i++) {
+            DailyData dailyData = new DailyData(R.drawable.ic_launcher_foreground, "daily", 0);
+            dailyDataArrayList.add(dailyData);
+            dailyAdapter.notifyDataSetChanged();
+        }
+
+        /* btn: task add */
         Button btn_add = (Button)view.findViewById(R.id.btn_add);
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TaskData taskData = new TaskData(R.drawable.ic_launcher_background, "task",0);
-                taskDataArrayList.add(taskData);
+                for(int i=0; i<3; i++) {
+                    TaskData taskData = new TaskData(R.drawable.ic_launcher_background, "task", 0);
+                    taskDataArrayList.add(taskData);
+                    taskAdapter.notifyDataSetChanged();
+                }
+            }
+        });
 
-                taskAdapter.notifyDataSetChanged();
+        /* btn: daily add */
+        Button btn_dailyadd = (Button)view.findViewById(R.id.btn_dailyadd);
+        btn_dailyadd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(int i=0; i<3; i++) {
+                    DailyData dailyData = new DailyData(R.drawable.ic_launcher_foreground, "daily", 0);
+                    dailyDataArrayList.add(dailyData);
+                    dailyAdapter.notifyDataSetChanged();
+                }
             }
         });
 

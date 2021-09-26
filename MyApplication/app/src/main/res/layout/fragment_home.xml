@@ -19,7 +19,13 @@
                 android:id="@+id/btn_add"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="추가"/>
+                android:text="task추가"/>
+
+            <Button
+                android:id="@+id/btn_dailyadd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="daily추가"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_checklist"
