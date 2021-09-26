@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.CustomViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.CustomViewHolder> implements ItemTouchHelperListener {
 
     private ArrayList<TaskData> taskList;
 
@@ -45,13 +45,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.CustomViewHold
             }
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        /*holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 remove(holder.getAbsoluteAdapterPosition());
                 return true;
             }
-        });
+        });*/
 
     }
 
@@ -69,6 +69,30 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.CustomViewHold
             e.printStackTrace();
         }
     }
+
+    public void setItems(ArrayList<TaskData> taskList) {
+        this.taskList = taskList;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onItemMove(int from_position, int to_position) {
+        TaskData item = taskList.get(from_position);
+        taskList.remove(from_position);
+
+        taskList.add(to_position, item);
+        item.setNumber(to_position);
+        notifyItemMoved(from_position, to_position);
+        return true;
+    }
+
+    @Override
+    public void onItemSwipe(int position) {
+        taskList.remove(position);
+        notifyItemRemoved(position);
+
+    }
+
 
     public class CustomViewHolder extends RecyclerView.ViewHolder{
 

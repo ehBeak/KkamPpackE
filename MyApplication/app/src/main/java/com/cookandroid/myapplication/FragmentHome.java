@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -34,6 +35,9 @@ public class FragmentHome extends Fragment {
     private TaskAdapter taskAdapter;
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
+
+    /* drag&drop */
+    private ItemTouchHelper itemTouchHelper;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -74,6 +78,8 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        /* recycler view */
         view = inflater.inflate(R.layout.fragment_home, container,false);
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerview_checklist);
@@ -88,13 +94,17 @@ public class FragmentHome extends Fragment {
 
         recyclerView.setAdapter(taskAdapter);
 
+        /* drag & drop */
+        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(taskAdapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         Button btn_add = (Button)view.findViewById(R.id.btn_add);
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"누름",Toast.LENGTH_SHORT).show();
-                TaskData taskData = new TaskData(R.drawable.ic_launcher_background, "task");
+                TaskData taskData = new TaskData(R.drawable.ic_launcher_background, "task",0);
                 taskDataArrayList.add(taskData);
+
                 taskAdapter.notifyDataSetChanged();
             }
         });
