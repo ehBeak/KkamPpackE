@@ -3,10 +3,16 @@ package com.cookandroid.myapplication;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +25,15 @@ public class FragmentHome extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    // view 설정
+    private View view;
+
+    /* recycler view 변수 설정 */
+    private ArrayList<TaskData> taskDataArrayList;
+    private TaskAdapter taskAdapter;
+    private RecyclerView recyclerView;
+    private GridLayoutManager gridLayoutManager;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -59,6 +74,31 @@ public class FragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container,false);
+
+        recyclerView = (RecyclerView)view.findViewById(R.id.recyclerview_checklist);
+
+        gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
+
+        recyclerView.setLayoutManager(gridLayoutManager);
+
+        taskDataArrayList = new ArrayList<>();
+
+        taskAdapter = new TaskAdapter(taskDataArrayList);
+
+        recyclerView.setAdapter(taskAdapter);
+
+        Button btn_add = (Button)view.findViewById(R.id.btn_add);
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),"누름",Toast.LENGTH_SHORT).show();
+                TaskData taskData = new TaskData(R.drawable.ic_launcher_background, "task");
+                taskDataArrayList.add(taskData);
+                taskAdapter.notifyDataSetChanged();
+            }
+        });
+
+        return view;
     }
 }
